@@ -5,8 +5,13 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "./node_modules/.bin/eslint src/*.js",
-    "prepush": "npm run lint"
+    "lint": "./node_modules/.bin/eslint src/*.js"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm test",
+      "prepush": "npm run lint"
+    }
   },
   "repository": {
     "type": "git",
