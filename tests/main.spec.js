@@ -1,188 +1,36 @@
 /* eslint-disable no-undef */
-import chai, { expect } from 'chai';
-import sinon from 'sinon';
-import sinonChai from 'sinon-chai';
+/*
+Desafio FizzBuzz
+Escreva uma lib que receba um número e:
+Se o número for divisível por 3, no lugar do número escreva 'Fizz' - X
+Se o número for divisível por 5, no lugar do número escreva 'Buzz' - X
+Se o número for divisível por 3 e 5, no lugar do número escreva 'FizzBuzz' - X
+Se não for múltiplo de nada, retorna o número
+*/
 
-import {
-  search,
-  searchAlbums,
-  searchArtists,
-  searchTracks,
-  searchPlaylists,
-} from '../src/main';
+import { expect } from 'chai';
+import FizzBuzz from '../src/main';
 
-chai.use(sinonChai);
-global.fetch = require('node-fetch'); // habilitando o global fetch na interface
-
-describe('SpotifyWrapper', () => {
-  describe('Smoke Tests', () => {
-    // search (generico) - + de 1 tipo
-    // searchAlbums
-    // searchArtists
-    // searchTracks
-    // searchPlaylists
-
-    it('should exist the search method', () => {
-      expect(search).to.exist;
-    });
-    it('should exist the searchAlbum method', () => {
-      expect(searchAlbums).to.exist;
-    });
-    it('should exist the searchArtits  method', () => {
-      expect(searchArtists).to.exist;
-    });
-    it('should exist the searchTracks method', () => {
-      expect(searchTracks).to.exist;
-    });
-    it('should exist the searchPlaylists method', () => {
-      expect(searchPlaylists).to.exist;
-    });
+describe('FizzBuzz', () => {
+  it('should return `Fizz` when multiple of 3', () => {
+    expect(FizzBuzz(3)).to.be.equal('Fizz');
+    expect(FizzBuzz(6)).to.be.equal('Fizz');
   });
 
-  describe('Generic Search', () => {
-    let fetchedStub;
-
-    beforeEach(() => {
-      fetchedStub = sinon.stub(global, 'fetch');
-      fetchedStub.resolves({ json: () => {} }); // faz retornar uma promisse com esse jeito
-    });
-
-    afterEach(() => {
-      fetchedStub.restore();
-    });
-
-    it('should call fetch function', () => {
-      const artists = search();
-      expect(fetchedStub).to.have.been.calledOnce;
-    });
-
-    it('should call fetch with the correct URL', () => {
-      context('passing to one type', () => {
-        const artists = search('Incubus', 'artist');
-        expect(fetchedStub).to.have.been.calledWith('https://api.spotify.com/v1/search?q=Incubus&type=artist');
-
-        const albums = search('Incubus', 'album');
-        expect(fetchedStub).to.have.been.calledWith('https://api.spotify.com/v1/search?q=Incubus&type=album');
-      });
-
-      context('passsing more than one type', () => {
-        const artistAndAlbums = search('Incubus', ['artist', 'album']);
-
-        expect(fetchedStub).to.have.been
-          .calledWith('https://api.spotify.com/v1/search?q=Incubus&type=artist,album');
-      });
-    });
-
-    // it('should return the JSON Data from the Promise', () => {
-    //   promise.resolve({ body: 'json' });
-    //   const artists = search('Incubus', 'artist');
-
-    // expect(artists.resolveValue).to.
-    // be.eql({ body: 'json' }); // deep equal, verificar todas as props, inclusive as internas
-    // });
+  it('should return `Fizz` when multiple of 5', () => {
+    expect(FizzBuzz(5)).to.be.equal('Buzz');
+    expect(FizzBuzz(10)).to.be.equal('Buzz');
   });
 
-  describe('searchArtist', () => {
-    let fetchedStub;
-
-    beforeEach(() => {
-      fetchedStub = sinon.stub(global, 'fetch');
-      fetchedStub.resolves({ json: () => {} }); // faz retornar uma promisse com esse jeito
-    });
-
-    afterEach(() => {
-      fetchedStub.restore();
-    });
-
-    it('should call fetch function', () => {
-      const artists = searchArtists('Incubus');
-      expect(fetchedStub).to.have.been.calledOnce;
-    });
-
-    it('should call fetch with the correct URL', () => {
-      const artists = searchArtists('Incubus');
-      expect(fetchedStub).to.have.been.calledWith('https://api.spotify.com/v1/search?q=Incubus&type=artist');
-
-      const artists2 = searchArtists('Muse');
-      expect(fetchedStub).to.have.been.calledWith('https://api.spotify.com/v1/search?q=Muse&type=artist');
-    });
+  it('should return `FizzBuzz` when multiple of 3 and 5', () => {
+    expect(FizzBuzz(15)).to.be.equal('FizzBuzz');
   });
 
-  describe('searchAlbums', () => {
-    let fetchedStub;
-
-    beforeEach(() => {
-      fetchedStub = sinon.stub(global, 'fetch');
-      fetchedStub.resolves({ json: () => {} }); // faz retornar uma promisse com esse jeito
-    });
-
-    afterEach(() => {
-      fetchedStub.restore();
-    });
-
-    it('should call fetch function', () => {
-      const albums = searchAlbums('Incubus');
-      expect(fetchedStub).to.have.been.calledOnce;
-    });
-
-    it('should call fetch with the correct URL', () => {
-      const albums = searchAlbums('Incubus');
-      expect(fetchedStub).to.have.been.calledWith('https://api.spotify.com/v1/search?q=Incubus&type=album');
-
-      const albums2 = searchAlbums('Muse');
-      expect(fetchedStub).to.have.been.calledWith('https://api.spotify.com/v1/search?q=Muse&type=album');
-    });
+  it('should return the number when non-multiple', () => {
+    expect(FizzBuzz(7)).to.be.equal(7);
   });
 
-  describe('searchTracks', () => {
-    let fetchedStub;
-
-    beforeEach(() => {
-      fetchedStub = sinon.stub(global, 'fetch');
-      fetchedStub.resolves({ json: () => {} }); // faz retornar uma promisse com esse jeito
-    });
-
-    afterEach(() => {
-      fetchedStub.restore();
-    });
-
-    it('should call fetch function', () => {
-      const tracks = searchTracks('Incubus');
-      expect(fetchedStub).to.have.been.calledOnce;
-    });
-
-    it('should call fetch with the correct URL', () => {
-      const tracks = searchTracks('Incubus');
-      expect(fetchedStub).to.have.been.calledWith('https://api.spotify.com/v1/search?q=Incubus&type=track');
-
-      const tracks2 = searchTracks('Muse');
-      expect(fetchedStub).to.have.been.calledWith('https://api.spotify.com/v1/search?q=Muse&type=track');
-    });
-  });
-
-  describe('searchPlaylist', () => {
-    let fetchedStub;
-
-    beforeEach(() => {
-      fetchedStub = sinon.stub(global, 'fetch');
-      fetchedStub.resolves({ json: () => {} }); // faz retornar uma promisse com esse jeito
-    });
-
-    afterEach(() => {
-      fetchedStub.restore();
-    });
-
-    it('should call fetch function', () => {
-      const playlist = searchPlaylists('Incubus');
-      expect(fetchedStub).to.have.been.calledOnce;
-    });
-
-    it('should call fetch with the correct URL', () => {
-      const playlist = searchPlaylists('Incubus');
-      expect(fetchedStub).to.have.been.calledWith('https://api.spotify.com/v1/search?q=Incubus&type=playlist');
-
-      const playlist2 = searchPlaylists('Muse');
-      expect(fetchedStub).to.have.been.calledWith('https://api.spotify.com/v1/search?q=Muse&type=playlist');
-    });
+  it('should return 0 when 0', () => {
+    expect(FizzBuzz(0)).to.be.equal(0);
   });
 });
